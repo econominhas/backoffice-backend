@@ -1,0 +1,30 @@
+name: dbdocs-deploy
+
+on:
+  push:
+    branches:
+      - release
+    paths:
+      - '**/*.prisma'
+
+jobs:
+  dbdocs-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Install prisma & dbdocs
+        run: yarn add -D dbdocs prisma prisma-dbml-generator
+
+      - name: Generate schema.dbml
+        run: npx prisma generate --generator dbml
+
+      - name: Update dbdocs project
+        env:
+          DBDOCS_TOKEN: ${{ secrets.DBDOCS_TOKEN }}
+        run: npx dbdocs build ./prisma/schema.dbml

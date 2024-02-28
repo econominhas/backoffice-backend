@@ -1,0 +1,12 @@
+{
+	"openapi/**/*": [
+		"bash -c \"yarn lint:openapi\"",
+		"bash -c \"yarn openapi:postman\""
+	],
+	"prisma/**/*": "bash -c \"yarn lint:prisma\"",
+	"(src|tests)/**/*": [
+		"bash -c \"yarn lint:ts\"",
+		"bash -c \"yarn lint:code\"",
+		"bash -c \"yarn test\""
+	]
+}
