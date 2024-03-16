@@ -1,0 +1,29 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "debian-openssl-3.0.x"]
+}
+
+generator dbml {
+  provider              = "prisma-dbml-generator"
+  output                = "."
+  projectName           = "Backoffice"
+  projectDatabaseType   = "PostgreSQL"
+  projectNote           = "The best way to manage your finances"
+  includeRelationFields = false
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id    String  @id @default(uuid())
+  email String? @unique
+  name  String?
+
+  @@map("users")
+}

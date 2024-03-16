@@ -1,0 +1,26 @@
+{
+	"moduleFileExtensions": ["js", "json", "ts"],
+	"rootDir": ".",
+	"testRegex": ".*\\.spec\\.ts$",
+	"transform": {
+		"^.+\\.(t|j)s$": "ts-jest"
+	},
+	"collectCoverageFrom": [
+		"src/**/*.(t|j)s",
+		"!src/app.module.ts",
+		"!src/config.ts",
+		"!src/main.ts",
+		"!src/models/*.ts",
+		"!src/adapters/*.ts",
+		"!src/adapters/implementations/s3/*.ts",
+		"!src/adapters/implementations/ses/*.ts",
+		"!src/adapters/implementations/sns/*.ts",
+		"!src/repositories/postgres/*.ts",
+		"!src/types/**/*.ts"
+	],
+	"coverageDirectory": "./coverage",
+	"testEnvironment": "node",
+	"moduleDirectories": ["node_modules", "src"],
+	"setupFiles": ["./tests/setup.ts"],
+	"resetMocks": true
+}

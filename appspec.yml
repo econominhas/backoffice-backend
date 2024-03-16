@@ -1,0 +1,39 @@
+version: 0.0
+
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/backoffice
+
+file_exists_behavior: OVERWRITE
+
+permissions:
+  - object: /home/ubuntu/backoffice
+    pattern: "**"
+    owner: ubuntu
+    mode: 777
+    type:
+      - directory
+      - file
+
+hooks:
+  ApplicationStop:
+    - location: scripts/ci-cd/stop.sh
+      timeout: 300
+      runas: ubuntu
+
+  AfterInstall:
+    - location: scripts/ci-cd/prepare.sh
+      timeout: 300
+      runas: ubuntu
+
+  ApplicationStart:
+    - location: scripts/ci-cd/start.sh
+      timeout: 300
+      runas: ubuntu
+
+  ValidateService:
+    - location: scripts/ci-cd/validate.sh
+      timeout: 300
+      runas: ubuntu

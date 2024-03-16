@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  localstack:
+    # https://medium.com/@muthomititus/a-guide-to-localstack-with-docker-compose-e1487e3a776f
+    image: localstack/localstack:1.0.4
+    container_name: backoffice-localstack
+    ports:
+      - '4567:4566'
+    environment:
+      - SERVICES=s3:4566
+      - HOSTNAME=localstack
+      - HOSTNAME_EXTERNAL=localstack
+      - DEFAULT_REGION=us-east-1
+    volumes:
+      - './localstack/buckets.sh:/docker-entrypoint-initaws.d/buckets.sh'
+    networks:
+      - backoffice-api_network
+
+  postgres:
+    image: 'postgres:latest'
+    container_name: backoffice-postgres
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: database
+    volumes:
+      - 'postgres:/var/lib/postgresql/data/'
+    networks:
+      - backoffice-api_network
+
+  api:
+    build:
+      context: '.'
+      dockerfile: Dockerfile.dev
+    image: backoffice-api
+    container_name: backoffice-api
+    command: yarn start:docker
+    depends_on:
+      - postgres
+      - localstack
+    ports:
+      - 3001:3000
+    env_file:
+      - .env
+    volumes:
+      - ./:/app/
+    networks:
+      - backoffice-api_network
+
+volumes:
+  postgres:
+
+networks:
+  backoffice-api_network:
+    driver: bridge
